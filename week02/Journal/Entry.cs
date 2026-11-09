@@ -4,11 +4,11 @@ public class Entry
     public string _promptText { get; }
     public string _entryText { get; }
 
-    public Entry(string date, string promptText, string entryText)
+    public Entry(string _date, string _promptText, string _entryText)
     {
-        _date = date;
-        _promptText = promptText;
-        _entryText = entryText;
+        this._date = _date;
+        this._promptText = _promptText;
+        this._entryText = _entryText;
     }
 
     public void Display()
