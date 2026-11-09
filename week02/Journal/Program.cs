@@ -1,3 +1,4 @@
+//Customization: I customized the journal program to save and load entries using JSON instead of separator-based text files.
 class Program
 {
     static void Main(string[] args)
