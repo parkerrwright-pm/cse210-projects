@@ -22,37 +22,39 @@ public class Journal
 
     public void SaveToFile(string file)
     {
-        JsonSerializerOptions options = new JsonSerializerOptions { WriteIndented = true };
+        JsonSerializerOptions options = new JsonSerializerOptions
         {
-            using StreamWriter writer = new StreamWriter(file);
-            foreach (Entry entry in _entries)
-            {
-                string json = JsonSerializer.Serialize(entry, options);
-                writer.WriteLine(json);
-            }
-        }
+            WriteIndented = true
+        };
+
+        string json = JsonSerializer.Serialize(_entries, options);
+        File.WriteAllText(file, json);
     }
 
     public void LoadFromFile(string file)
     {
         string json = File.ReadAllText(file);
-        List<Entry> loadedEntries = JsonSerializer.Deserialize<List<Entry>>(json);
+        List<Entry> loadedEntries =
+            JsonSerializer.Deserialize<List<Entry>>(json);
+
         if (loadedEntries == null)
         {
-            throw new FileNotFoundException($"The file {file} was not found.");
+            throw new JsonException("The file does not contain a journal.");
         }
+
         foreach (Entry entry in loadedEntries)
         {
-            if  (entry == null
-                || entry._date == null
-                || entry._prompt == null
-                || entry._entry == null)
+            if (entry == null ||
+                entry._date == null ||
+                entry._promptText == null ||
+                entry._entryText == null)
             {
-                throw new JsonException($"The file {file} contains an invalid journal entry.");
+                throw new JsonException(
+                    $"The file {file} contains an invalid journal entry.");
             }
         }
 
-    _entries.Clear();
-    _entries.AddRange(loadedEntries);
+        _entries.Clear();
+        _entries.AddRange(loadedEntries);
     }
 }
