@@ -12,12 +12,7 @@ public class Resume
         Console.WriteLine("Jobs:");
         foreach (Job job in _jobs)
         {
-            job.Display();
-            Console.WriteLine($"Company: {job._company}");
-            Console.WriteLine($"Job Title: {job._jobTitle}");
-            Console.WriteLine($"Start Date: {job._startDate}");
-            Console.WriteLine($"End Date: {job._endDate}");
-            Console.WriteLine();
+            job.DisplayJob();
         }
     }
 }
