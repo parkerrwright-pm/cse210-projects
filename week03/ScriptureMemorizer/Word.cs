@@ -2,7 +2,7 @@ namespace ScriptureMemorizer;
 
 public class Word
 {
-    private string _text;
+    private readonly string _text;
     private bool _isHidden;
 
     public Word(string text)
@@ -13,19 +13,22 @@ public class Word
 
     public void Hide()
     {
-    }
-
-    public void Show()
-    {
+        _isHidden = true;
     }
 
     public bool IsHidden()
     {
-        return false;
+        return _isHidden;
     }
 
     public string GetDisplayText()
     {
-        return string.Empty;
+        if (!_isHidden)
+        {
+            return _text;
+        }
+
+        return string.Concat(_text.Select(character =>
+            char.IsLetter(character) ? '_' : character));
     }
 }

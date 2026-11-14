@@ -2,29 +2,34 @@ namespace ScriptureMemorizer;
 
 public class Reference
 {
-    private string _book;
-    private int _chapter;
-    private int _verse;
-    private int _endVerse;
+    private readonly string _bookName;
+    private readonly int _chapterNumber;
+    private readonly int _startingVerse;
+    private readonly int? _endingVerse;
 
-    public Reference(string book, int chapter, int verse)
+    public Reference(string bookName, int chapterNumber, int verse)
     {
-        _book = book;
-        _chapter = chapter;
-        _verse = verse;
-        _endVerse = 0;
+        _bookName = bookName;
+        _chapterNumber = chapterNumber;
+        _startingVerse = verse;
+        _endingVerse = null;
     }
 
-    public Reference(string book, int chapter, int startVerse, int endVerse)
+    public Reference(string bookName, int chapterNumber, int startingVerse, int endingVerse)
     {
-        _book = book;
-        _chapter = chapter;
-        _verse = startVerse;
-        _endVerse = endVerse;
+        _bookName = bookName;
+        _chapterNumber = chapterNumber;
+        _startingVerse = startingVerse;
+        _endingVerse = endingVerse;
     }
 
     public string GetDisplayText()
     {
-        return string.Empty;
+        if (_endingVerse.HasValue)
+        {
+            return $"{_bookName} {_chapterNumber}:{_startingVerse}-{_endingVerse}";
+        }
+
+        return $"{_bookName} {_chapterNumber}:{_startingVerse}";
     }
 }
