@@ -1,12 +1,24 @@
 class Order
 {
-    public List<Product> Products;
-    public Customer Customer;
+    private List<Product> _products;
+    private Customer _customer;
+
+    public List<Product> Products
+    {
+        get => _products;
+        set => _products = value;
+    }
+
+    public Customer Customer
+    {
+        get => _customer;
+        set => _customer = value;
+    }
 
     public Order(Customer customer)
     {
-        Customer = customer;
-        Products = new List<Product>();
+        _customer = customer;
+        _products = new List<Product>();
     }
 
     public void AddProduct(Product product)
