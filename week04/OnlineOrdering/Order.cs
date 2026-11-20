@@ -8,7 +8,7 @@ class Order
         Customer = customer;
         Products = new List<Product>();
     }
-}
+
     public void AddProduct(Product product)
     {
         Products.Add(product);
