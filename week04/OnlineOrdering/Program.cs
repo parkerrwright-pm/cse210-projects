@@ -4,15 +4,15 @@ class Program
 {
     static void Main(string[] args)
     {
-        // Create addresses
+        // Create addresses 
         Address address1 = new Address("123 Main St", "Provo", "UT", "USA");
         Address address2 = new Address("456 Elm St", "Toronto", "ON", "Canada");
 
-        // Create customers
+        // Create customers 
         Customer customer1 = new Customer("John Doe", address1);
         Customer customer2 = new Customer("Jane Smith", address2);
 
-        // Create products
+        // Create products 
         Product product1 = new Product("Laptop", "P001", 999.99, 1);
         Product product2 = new Product("Mouse", "P002", 25.50, 2);
         Product product3 = new Product("Keyboard", "P003", 45.00, 1);
