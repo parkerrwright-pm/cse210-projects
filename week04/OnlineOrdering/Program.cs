@@ -1,9 +1,3 @@
-The entry point of the application. It should:
-
-Create addresses, customers, and products
-Create at least two orders with 2–3 products each
-Display each order's packing label, shipping label, and final price
-
 using System;
 
 class Program
