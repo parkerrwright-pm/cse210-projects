@@ -58,12 +58,33 @@ public class ReflectingActivity : Activity
 
     public void DisplayQuestions()
     {
+        List<string> unusedQuestions = new List<string>(_questions);
         DateTime endTime = DateTime.Now.AddSeconds(_duration);
+        int secondsPerQuestion = 15;
 
         while (DateTime.Now < endTime)
         {
-            Console.Write($"> {GetRandomQuestion()} ");
-            ShowSpinner(5);
+            if (unusedQuestions.Count == 0)
+            {
+                Console.WriteLine("Keep pondering your answers for the remaining time.");
+
+                int remainingSeconds =
+                    (int)Math.Ceiling((endTime - DateTime.Now).TotalSeconds);
+
+                if (remainingSeconds > 0)
+                {
+                    ShowSpinner(remainingSeconds);
+                }
+
+                break;
+            }
+
+            int index = Random.Shared.Next(unusedQuestions.Count);
+            string question = unusedQuestions[index];
+            unusedQuestions.RemoveAt(index);
+
+            Console.WriteLine($"> {question}");
+            ShowSpinner(secondsPerQuestion);
             Console.WriteLine();
         }
     }

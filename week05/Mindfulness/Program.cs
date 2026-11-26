@@ -1,3 +1,6 @@
+/* Customization: Ensure duplicate questions are not asked during the Reflecting Activity. 
+*/
+
 using System;
 
 class Program
