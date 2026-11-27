@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
+using System.Threading;
 
 public class ListingActivity : Activity
 {
@@ -47,19 +50,58 @@ public class ListingActivity : Activity
     public List<string> GetListFromUser()
     {
         List<string> items = new List<string>();
-        DateTime endTime = DateTime.Now.AddSeconds(_duration);
+        StringBuilder response = new StringBuilder();
+        Stopwatch timer = Stopwatch.StartNew();
+        Console.Write("> ");
 
-        while (DateTime.Now < endTime)
+        while (GetRemainingTime(timer) > TimeSpan.Zero)
         {
-            Console.Write("> ");
-            string item = Console.ReadLine();
-
-            if (!string.IsNullOrWhiteSpace(item))
+            if (Console.IsInputRedirected)
             {
-                items.Add(item);
+                // Redirected input is used for files and automated checks.
+                string line = Console.ReadLine();
+                if (line == null)
+                {
+                    break;
+                }
+                if (GetRemainingTime(timer) > TimeSpan.Zero && !string.IsNullOrWhiteSpace(line))
+                {
+                    items.Add(line);
+                }
+                continue;
+            }
+
+            if (!Console.KeyAvailable)
+            {
+                Thread.Sleep(20);
+                continue;
+            }
+
+            ConsoleKeyInfo key = Console.ReadKey(true);
+            if (key.Key == ConsoleKey.Enter)
+            {
+                if (!string.IsNullOrWhiteSpace(response.ToString()))
+                {
+                    items.Add(response.ToString());
+                }
+                response.Clear();
+                Console.WriteLine();
+                Console.Write("> ");
+            }
+            else if (key.Key == ConsoleKey.Backspace && response.Length > 0)
+            {
+                response.Length--;
+                Console.Write("\b \b");
+            }
+            else if (!char.IsControl(key.KeyChar))
+            {
+                response.Append(key.KeyChar);
+                Console.Write(key.KeyChar);
             }
         }
 
+        Console.WriteLine();
+        Console.WriteLine("Time is up. Only responses submitted with Enter are counted.");
         return items;
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using System.Diagnostics;
 
 public class Activity
 {
@@ -45,25 +46,58 @@ public class Activity
         Console.WriteLine();
     }
 
+    protected TimeSpan GetRemainingTime(Stopwatch timer)
+    {
+        TimeSpan remaining = TimeSpan.FromSeconds(_duration) - timer.Elapsed;
+        return remaining > TimeSpan.Zero ? remaining : TimeSpan.Zero;
+    }
+
     public void ShowSpinner(int seconds)
     {
-        string[] spinner = { "|", "/", "-", "\\" };
+        ShowSpinner(TimeSpan.FromSeconds(seconds));
+    }
 
-        for (int i = 0; i < seconds * 4; i++)
+    protected void ShowSpinner(TimeSpan duration)
+    {
+        string[] spinner = { "|", "/", "-", "\\" };
+        Stopwatch timer = Stopwatch.StartNew();
+        int frame = 0;
+
+        while (timer.Elapsed < duration)
         {
-            Console.Write(spinner[i % spinner.Length]);
-            Thread.Sleep(250);
+            Console.Write(spinner[frame++ % spinner.Length]);
+            Pause(duration - timer.Elapsed, 250);
             Console.Write("\b \b");
         }
     }
 
     public void ShowCountDown(int seconds)
     {
-        for (int i = seconds; i > 0; i--)
+        ShowCountDown(TimeSpan.FromSeconds(seconds));
+    }
+
+    protected void ShowCountDown(TimeSpan duration)
+    {
+        Stopwatch timer = Stopwatch.StartNew();
+
+        while (timer.Elapsed < duration)
         {
-            Console.Write(i);
-            Thread.Sleep(1000);
-            Console.Write("\b \b");
+            TimeSpan remaining = duration - timer.Elapsed;
+            string number = Math.Ceiling(remaining.TotalSeconds).ToString();
+            Console.Write(number);
+            Pause(remaining, 1000);
+            Console.Write(new string('\b', number.Length));
+            Console.Write(new string(' ', number.Length));
+            Console.Write(new string('\b', number.Length));
+        }
+    }
+
+    private void Pause(TimeSpan remaining, int maximumMilliseconds)
+    {
+        if (remaining > TimeSpan.Zero)
+        {
+            Thread.Sleep(TimeSpan.FromMilliseconds(
+                Math.Min(remaining.TotalMilliseconds, maximumMilliseconds)));
         }
     }
 }

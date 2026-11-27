@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 public class BreathingActivity : Activity
 {
@@ -13,17 +14,36 @@ public class BreathingActivity : Activity
     {
         DisplayStartingMessage();
 
-        DateTime endTime = DateTime.Now.AddSeconds(_duration);
+        Stopwatch timer = Stopwatch.StartNew();
 
-        while (DateTime.Now < endTime)
+        while (GetRemainingTime(timer) > TimeSpan.Zero)
         {
+            TimeSpan remaining = GetRemainingTime(timer);
+            TimeSpan pause = TimeSpan.FromSeconds(4);
+
+            if (remaining < pause)
+            {
+                pause = remaining;
+            }
+
             Console.Write("Breathe in... ");
-            ShowCountDown(4);
+            ShowCountDown(pause);
             Console.WriteLine();
 
-            Console.Write("Breathe out... ");
-            ShowCountDown(4);
-            Console.WriteLine();
+            remaining = GetRemainingTime(timer);
+            if (remaining > TimeSpan.Zero)
+            {
+                pause = TimeSpan.FromSeconds(4);
+
+                if (remaining < pause)
+                {
+                    pause = remaining;
+                }
+
+                Console.Write("Breathe out... ");
+                ShowCountDown(pause);
+                Console.WriteLine();
+            }
         }
 
         DisplayEndingMessage();

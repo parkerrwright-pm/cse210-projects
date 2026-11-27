@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public class ReflectingActivity : Activity
 {
@@ -59,32 +60,39 @@ public class ReflectingActivity : Activity
     public void DisplayQuestions()
     {
         List<string> unusedQuestions = new List<string>(_questions);
-        DateTime endTime = DateTime.Now.AddSeconds(_duration);
-        int secondsPerQuestion = 15;
+        Stopwatch timer = Stopwatch.StartNew();
+        string previousQuestion = "";
 
-        while (DateTime.Now < endTime)
+        while (GetRemainingTime(timer) > TimeSpan.Zero)
         {
             if (unusedQuestions.Count == 0)
             {
-                Console.WriteLine("Keep pondering your answers for the remaining time.");
-
-                int remainingSeconds =
-                    (int)Math.Ceiling((endTime - DateTime.Now).TotalSeconds);
-
-                if (remainingSeconds > 0)
-                {
-                    ShowSpinner(remainingSeconds);
-                }
-
-                break;
+                unusedQuestions.AddRange(_questions);
             }
 
             int index = Random.Shared.Next(unusedQuestions.Count);
+
+            if (unusedQuestions.Count > 1 &&
+                unusedQuestions[index] == previousQuestion)
+            {
+                index = (index + 1) % unusedQuestions.Count;
+            }
+            // Ensure the question doesn't repeat.
             string question = unusedQuestions[index];
             unusedQuestions.RemoveAt(index);
+            previousQuestion = question;
 
             Console.WriteLine($"> {question}");
-            ShowSpinner(secondsPerQuestion);
+
+            TimeSpan pause = TimeSpan.FromSeconds(15);
+            TimeSpan remaining = GetRemainingTime(timer);
+
+            if (remaining < pause)
+            {
+                pause = remaining;
+            }
+
+            ShowSpinner(pause);
             Console.WriteLine();
         }
     }

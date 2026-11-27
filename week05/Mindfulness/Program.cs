@@ -1,5 +1,4 @@
-/* Customization: Ensure duplicate questions are not asked during the Reflecting Activity. 
-*/
+// Reflection uses every question before repeating; activity timers stop at the selected duration.
 
 using System;
 
